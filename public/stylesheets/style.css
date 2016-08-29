@@ -1,0 +1,68 @@
+.temp span, .hum span {
+  font-size: 5vmin;
+  vertical-align: top;
+  top: 1.66vmin;
+  position: relative;
+}
+.hum span.fa-tint {
+  vertical-align: top;
+  top: 3.33vmin;
+}
+.temp, .hum {
+  vertical-align: top;
+  display: inline-block;
+  opacity: 0.5;
+  font-family: "Helvetica Neue", "Roboto Light", "Segoe UI Web Light", "Segoe UI Light", "Segoe UI Web Regular", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.temp-hum-container {
+  text-align: center;
+  font-size: 10vmin;
+  z-index: 2;
+}
+.switches-container {
+  opacity: 0.5;
+  font-size: 8vmin;
+}
+.switches-container .fa-plus, .switches-container .fa-minus {
+  font-size: 6vmin;
+}
+.switches-container span {
+  font-family: "Helvetica Neue", "Roboto Light", "Segoe UI Web Light", "Segoe UI Light", "Segoe UI Web Regular", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.switches-container label {
+  font-size: 6vmin;
+  opacity: 1;
+  z-index: 2;
+}
+.switches-container input[type=range] {
+  display: inline;
+  width: 40vw;
+}
+.switches input[type=time] {
+  font-size: 10px;
+  width: 40%;
+  color: white;
+}
+canvas {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  opacity: 0.1;
+}
+.switch {
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  z-index: 1000;
+}
+h1 {
+  font-size: 7vmin;
+}
+.content {
+  padding: 1vmin;
+}
+body.inactive{
+  opacity:0.1;
+}

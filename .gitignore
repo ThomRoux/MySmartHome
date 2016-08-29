@@ -1,4 +1,5 @@
-/app/*.js
-/app/*.map
+/public/javascripts/app/*.js
+/public/javascripts/app/*.map
 /node_modules/
 /npm-debug.log
+/.DS_Store
