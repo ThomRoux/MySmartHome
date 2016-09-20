@@ -6,9 +6,7 @@ import {Component, NgZone} from 'angular2/core';
 })
 
 export class AppComponent {
-    price: number = 0.0;
     socket = null;
-    bidValue = '';
 
     room: Object = { sensor : {} };// = room;
     date = new Date();
@@ -17,7 +15,6 @@ export class AppComponent {
         this.socket = io('http://192.168.1.65:8000');
         this.socket.on('roomInit', function(data){
           this.room = data;
-          console.log(data);
         }.bind(this));
         this.socket.on('sensorUpdate', function(data){
           this.room.sensor = data;
@@ -36,7 +33,8 @@ export class AppComponent {
       setInterval(() => {
           this.date =  new Date();
        }, 1000);
-      //room.canvas(this.canvas.nativeElement);
-      //this.socket.emit('requestRoom');
+      this.socket.emit('requestRoom');
     }
+
+
 }
