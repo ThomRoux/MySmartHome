@@ -72,7 +72,7 @@ var LED = function(_name, _dimmerPin, _switchPin, _rpio, _io) {
     _io.emit('valueChanged',this);
   }
   this.dimmer = function(value) {
-    _rpio.pwmSetData(this.dimmerPin, Math.round(value*1024/100);
+    _rpio.pwmSetData(this.dimmerPin, Math.round(value*1024/100));
     this.level = value;
     this.on = (value>0);
     console.log("User dimmed the LED to value ", value);
