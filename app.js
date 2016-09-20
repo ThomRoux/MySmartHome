@@ -10,14 +10,165 @@ var app = express();
 var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+var rpio = {
+  open : function(){},
+  pwmSetClockDivider: function(){},
+  pwmSetRange: function(){},
+  pwmSetData: function(){},
+  write: function(){},
+  poll: function(){},
+  PWM: 0,
+  INPUT: 0,
+  OUTPUT: 0
+};//require('rpio');
 server.listen(8000);
 io.set("origins", "*:*");
 
-var Pantin = [
-  room
-];
+/*
+  CONNECTION AU MODULE GPIO DU RASPBERRY
+*/
+/*var rpio = require('rpio');
+rpio.init({
+  gpiomem: false,
+  mapping: 'physical'
+});*/
+
+/*
+  DEFINITION DES OBJETS CONNECTES
+*/
+var LED = function(_name, _dimmerPin, _switchPin, _rpio, _io) {
+  this.name = _name;
+  this.type = 'LED';
+  this.dimmerPin = _dimmerPin;
+  this.switchPin = _switchPin;
+  this.level = 0;
+  this.on = false;
+  _rpio = _rpio || rpio;
+  _io = _io || io;
+  //this.rpio = _rpio;
+
+  _rpio.open(this.dimmerPin, rpio.PWM);
+  _rpio.pwmSetClockDivider(32);
+  _rpio.pwmSetRange(this.dimmerPin, 1024);
+  _rpio.open(this.switchPin, rpio.INPUT);
+
+  this.toggle = function() {
+    if (this.on) this.turnOff();
+    else this.turnOn();
+  }
+
+  this.turnOn = function() {
+    _rpio.pwmSetData(this.dimmerPin, 1024);
+    console.log("User turned on the LED with the switch");
+    this.on = true;
+    this.level = 100;
+    _io.emit('valueChanged',this);
+  }
+  this.turnOff = function() {
+    _rpio.pwmSetData(this.dimmerPin, 0);
+    console.log("User turned off the LED with the switch");
+    this.on = false;
+    this.level = 0;
+    _io.emit('valueChanged',this);
+  }
+  this.dimmer = function(value) {
+    _rpio.pwmSetData(this.dimmerPin, Math.round(value*1024/100);
+    this.level = value;
+    this.on = (value>0);
+    console.log("User dimmed the LED to value ", value);
+    _io.emit('valueChanged',this);
+  }
+
+  // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
+  _rpio.poll(this.switchPin, this.toggle, rpio.POLL_BOTH);
+}
+
+var Light = function(_name, _powerPin, _switchPin, _rpio) {
+  this.name = _name;
+  this.type = 'Light';
+  this.powerPin = _powerPin;
+  this.switchPin = _switchPin;
+  this.on = false;
+
+  this.rpio.open(this.powerPin, rpio.OUTPUT);
+  this.rpio.open(this.switchPin, rpio.INPUT);
+
+  this.toggle = function() {
+    if (this.on) this.turnOff();
+    else this.turnOn();
+  }
+  this.turnOn = function() {
+    this.rpio.write(this.powerPin, rpio.HIGH);
+    this.on = true;
+  }
+  this.turnOff = function() {
+    this.rpio.write(this.powerPin, rpio.LOW);
+  }
+
+  // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
+  this.rpio.poll(this.switchPin, this.toggle, rpio.POLL_BOTH);
+}
+
+var RGBLED = function(_name, _dimmerPins, _switchPin, _rpio) {
+  this.name = _name;
+  this.type = 'RGB LED';
+  this.dimmerPins = _dimmerPins;
+  this.switchPin = _switchPin;
+  this.rgb = [255,255,255];
+  this.on = false;
+
+  this.rpio.pwmSetClockDivider(64);
+  this.rpio.open(this.dimmerPins[0],rpio.PWM);
+  this.rpio.pwmSetRange(this.dimmerPin[0], 255);
+  this.rpio.open(this.dimmerPin[1], rpio.PWM);
+  this.rpio.pwmSetRange(this.dimmerPin[1], 255);
+  this.rpio.open(this.dimmerPin[1], rpio.PWM);
+  this.rpio.pwmSetRange(this.dimmerPin[1], 255);
+  this.rpio.open(this.switchPin, rpio.INPUT);
+
+  this.turnOn = function() {
+    this.rpio.pwmSetData(this.dimmerPin[0], 255);
+    this.rpio.pwmSetData(this.dimmerPin[1], 255);
+    this.rpio.pwmSetData(this.dimmerPin[2], 255);
+    this.rgb = [255,255,255];
+    this.on = true;
+  }
+  this.turnOff = function() {
+    this.rpio.pwmSetData(this.dimmerPin[0], 0);
+    this.rpio.pwmSetData(this.dimmerPin[1], 0);
+    this.rpio.pwmSetData(this.dimmerPin[2], 0);
+    this.on = false;
+  }
+  this.dimmer = function(r,g,b) {
+    if (r == 0 && g == 0 && b == 0) {
+      this.turnOff();
+    } else {
+      this.rpio.pwmSetData(this.dimmerPin[0], r);
+      this.rpio.pwmSetData(this.dimmerPin[1], g);
+      this.rpio.pwmSetData(this.dimmerPin[2], b);
+      this.rgb = [r,g,b];
+      this.on = true;
+    }
+  }
+
+  // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
+  this.rpio.poll(this.switchPin, this.toggle, rpio.POLL_BOTH);
+}
+
+var Motor = function(_name, _pins, _switchPins, _rpio) {
+  this.name = _name;
+  this.type = 'Motor';
+  this.pins = _pins;
+  this.switchPins = _switchPins;
+
+}
+
+
 var room = {
   name: 'Chambre Wesley',
+  floorplan: function(raph) {
+    return raph.rect(500, 0, 280,300);
+  },
   temperature: true,
   humidity: true,
   sensor: { temperature : 27, humidity: 55 },
@@ -26,19 +177,15 @@ var room = {
     { name: 'Velux', PIN: [16, 17], type: 'motor', value: 0 }
   ]
 };
+var config = {
+  'Cuisine': new LED('Cuisine',12,1,rpio)
+};
+
 
 io.on('connection', function (socket) {
-  socket.emit('roomInit', room);
-	setInterval(function(){
-    room.sensor.temperature += Math.random()-0.5;
-    room.sensor.humidity += 5*Math.random()-2.5;
-    socket.emit('sensorUpdate',room.sensor);
-  }, 5000);
-  socket.on('changeDimmer', function(data){
-    room.switches[data.id].value = data.value;
-    console.log('Changement ', room.name, room.switches[data.id].name, data.value);
-    // ici on comunique avec le RPI avant de propager l'information
-    socket.broadcast.emit('valueChanged',data);
+  socket.emit('init', config);
+  socket.on('valueChanged', function(data){
+    config[data.id].dimmer(data.value);
   });
 });
 
@@ -46,6 +193,7 @@ io.on('connection', function (socket) {
 
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
 app.use('/templates', express.static(__dirname + '/views/templates/'));
+app.use('/views', express.static(__dirname + '/views/'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
