@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let dev of config | async | keys ; let i=index;">
+        <tr *ngFor="#dev of config |async| keys ; #i=index;">
           <td>{{dev.value.type}}</td>
           <td>{{dev.value.name}}</td>
           <td>{{dev.value.pins}}</td>
