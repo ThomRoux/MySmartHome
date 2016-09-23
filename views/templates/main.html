@@ -1,6 +1,6 @@
 <div class="content">
 
-<h1 class='text-info'><a href="http://mbpthom.local:3030/settings" class="fa fa-caret-left"></a>Configuration<span> PiCtrl1</span></h1>
+<h1 class='text-info'><a href="http://mbpthom.local:3030/settings" class="fa fa-caret-left"></a> Configuration <span> PiCtrl1</span></h1>
 
 <div class="block">
   <div class="block-content">
@@ -15,11 +15,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="#dev of config; #i=index;">
-          <td>{{dev.type}}</td>
-          <td>{{dev.name}}</td>
-          <td>{{dev.pins}}</td>
-          <td>{{dev.switchPins}}</td>
+        <tr *ngFor="let dev of config | async | keys ; #i=index;">
+          <td>{{config[dev].type}}</td>
+          <td>{{config[dev].name}}</td>
+          <td>{{config[dev].pins}}</td>
+          <td>{{config[dev].switchPins}}</td>
           <td><button class="btn push-5-r push-10" type="button"><i class="fa fa-times"></i></button></td>
         </tr>
         <tr>
