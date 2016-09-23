@@ -28,6 +28,7 @@ export class AppComponent {
         this.socket = io('http://pictrl1.local:8000');
         this.socket.on('init', function(data){
             this.config = data;
+            console.log(config);
         }.bind(this));
         /*this.socket.on('roomInit', function(data){
           this.room = data;
