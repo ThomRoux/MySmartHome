@@ -30,6 +30,7 @@ export class AppComponent {
     _config : Subject<any>
 
     constructor(private zone:NgZone){
+        this._config = <Subject<any>>new Subject();
         this.socket = io('http://pictrl1.local:8000');
         this.socket.on('init', function(data){
             //this.config = data;
