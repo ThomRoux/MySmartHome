@@ -3,6 +3,8 @@ import {Component, Pipe, PipeTransform, NgZone} from 'angular2/core';
 import { Observable }     from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
+declare var jsonfile : any;
+
 @Pipe({name: 'keys'})
 export class KeysPipe implements PipeTransform {
   transform(value, args:string[]) : any {
@@ -27,18 +29,16 @@ export class AppComponent {
     //config = {};
     //date = new Date();
 
-    _config : Subject<any>;
-
-    ngOnInit() {
-      this._config = <Subject<any>>new Subject();
-    }
+    config : any;
 
     constructor(private zone:NgZone){
+        this.config = jsonfile.readFileSync('/config.json');
+        console.log(this.config);
         this.socket = io('http://pictrl1.local:8000');
-        this.socket.on('init', function(data){
+        //this.socket.on('init', function(data){
             //this.config = data;
-            this._config.next(data);
-        }.bind(this));
+            //this._config.next(data);
+        //}.bind(this));
         /*this.socket.on('roomInit', function(data){
           this.room = data;
         }.bind(this));
@@ -48,10 +48,6 @@ export class AppComponent {
         this.socket.on('valueChanged', function(data){
           this.room.switches[data.id].value = data.value;
         }.bind(this));*/
-    }
-
-    get config() {
-      return this._config.asObservable();
     }
 
     /*changeValue(id, value) {
