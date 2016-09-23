@@ -36,10 +36,10 @@ rpio.init({
 /*
   DEFINITION DES OBJETS CONNECTES
 */
-var LED = function(_name, _dimmerPin, _switchPin, _rpio, _io) {
+var LED = function(_name, _outputPin, _switchPin, _rpio, _io) {
   this.name = _name;
   this.type = 'LED';
-  this.dimmerPin = _dimmerPin;
+  this.outputPin = _outputPin;
   this.switchPin = _switchPin;
   this.level = 0;
   this.on = false;
@@ -47,9 +47,9 @@ var LED = function(_name, _dimmerPin, _switchPin, _rpio, _io) {
   _io = _io || io;
   //this.rpio = _rpio;
 
-  _rpio.open(this.dimmerPin, rpio.PWM);
+  _rpio.open(this.outputPin, rpio.PWM);
   _rpio.pwmSetClockDivider(32);
-  _rpio.pwmSetRange(this.dimmerPin, 1024);
+  _rpio.pwmSetRange(this.outputPin, 1024);
   _rpio.open(this.switchPin, rpio.INPUT);
 
   this.toggle = function() {
@@ -58,21 +58,21 @@ var LED = function(_name, _dimmerPin, _switchPin, _rpio, _io) {
   }
 
   this.turnOn = function() {
-    _rpio.pwmSetData(this.dimmerPin, 1024);
+    _rpio.pwmSetData(this.outputPin, 1024);
     console.log("User turned on the LED with the switch");
     this.on = true;
     this.level = 100;
     _io.emit('valueChanged',this);
   }
   this.turnOff = function() {
-    _rpio.pwmSetData(this.dimmerPin, 0);
+    _rpio.pwmSetData(this.outputPin, 0);
     console.log("User turned off the LED with the switch");
     this.on = false;
     this.level = 0;
     _io.emit('valueChanged',this);
   }
   this.dimmer = function(value) {
-    _rpio.pwmSetData(this.dimmerPin, Math.round(value*1024/100));
+    _rpio.pwmSetData(this.outputPin, Math.round(value*1024/100));
     this.level = value;
     this.on = (value>0);
     console.log("User dimmed the LED to value ", value);
@@ -177,6 +177,18 @@ var room = {
     { name: 'Velux', PIN: [16, 17], type: 'motor', value: 0 }
   ]
 };
+
+var configFromJSON = {
+  'LED': function(data) {
+    return new LED(data.name, data.outputPin, data.switchPin);
+  }
+}
+var config_json = {
+  'Cuisine': {type: 'LED', name: 'Cuisine', outputPin: 12, switchPin: 1}
+};
+/*var config = _.mapObject(config_json, function(val, key) {
+  return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
+});*/
 var config = {
   'Cuisine': new LED('Cuisine',12,1,rpio)
 };
@@ -186,6 +198,19 @@ io.on('connection', function (socket) {
   socket.emit('init', config);
   socket.on('valueChanged', function(data){
     config[data.id].dimmer(data.value);
+  });
+  socket.on('addDevice', function(data){ // data = {type:, name:, outputPin: switchPin:}
+    config_json[data.name] = data;
+    // save config.json file from config_json
+    config_json[data.name] = configFromJSON[data.type](data.name, data.ouputPin, data.switchPin);
+    io.emit('init', config);
+  });
+  socket.on('removeDevice', function(name){
+    delete config_json[name];
+    // save config.json from config_json
+    // immediatly aply change to config
+    delete config[name];
+    io.emit('init', config);
   });
 });
 
