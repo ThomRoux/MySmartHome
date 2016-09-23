@@ -15,11 +15,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let dev of config | async | keys ; #i=index;">
-          <td>{{config[dev].type}}</td>
-          <td>{{config[dev].name}}</td>
-          <td>{{config[dev].pins}}</td>
-          <td>{{config[dev].switchPins}}</td>
+        <tr *ngFor="let dev of config | async | keys ; let i=index;">
+          <td>{{dev.value.type}}</td>
+          <td>{{dev.value.name}}</td>
+          <td>{{dev.value.pins}}</td>
+          <td>{{dev.value.switchPins}}</td>
           <td><button class="btn push-5-r push-10" type="button"><i class="fa fa-times"></i></button></td>
         </tr>
         <tr>
