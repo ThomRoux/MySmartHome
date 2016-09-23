@@ -215,7 +215,7 @@ io.on('connection', function (socket) {
 });
 
 
-
+app.use('/config.json', express.static(__dirname + '/config.json'));
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
 app.use('/templates', express.static(__dirname + '/views/templates/'));
 app.use('/views', express.static(__dirname + '/views/'));
