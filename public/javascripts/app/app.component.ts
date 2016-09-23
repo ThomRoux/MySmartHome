@@ -8,12 +8,16 @@ import {Component, NgZone} from 'angular2/core';
 export class AppComponent {
     socket = null;
 
-    room: Object = { sensor : {} };// = room;
-    date = new Date();
+    //room: Object = { sensor : {} };// = room;
+    config = {};
+    //date = new Date();
 
     constructor(private zone:NgZone){
-        this.socket = io('http://192.168.1.65:8000');
-        this.socket.on('roomInit', function(data){
+        this.socket = io('http://192.168.1.6:8000');
+        this.socket.on('init', function(data){
+            this.config = data;
+        }.bind(this));
+        /*this.socket.on('roomInit', function(data){
           this.room = data;
         }.bind(this));
         this.socket.on('sensorUpdate', function(data){
@@ -21,10 +25,10 @@ export class AppComponent {
         }.bind(this));
         this.socket.on('valueChanged', function(data){
           this.room.switches[data.id].value = data.value;
-        }.bind(this));
+        }.bind(this));*/
     }
 
-    changeValue(id, value) {
+    /*changeValue(id, value) {
       this.socket.emit('valueChanged',{id: id, value: value});
     }
 
@@ -34,7 +38,7 @@ export class AppComponent {
           this.date =  new Date();
        }, 1000);
       this.socket.emit('requestRoom');
-    }
+    }*/
 
 
 }
