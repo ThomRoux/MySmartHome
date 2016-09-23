@@ -27,10 +27,13 @@ export class AppComponent {
     //config = {};
     //date = new Date();
 
-    _config : Subject<any>
+    _config : Subject<any>;
+
+    ngOnInit() {
+      this._config = <Subject<any>>new Subject();
+    }
 
     constructor(private zone:NgZone){
-        this._config = <Subject<any>>new Subject();
         this.socket = io('http://pictrl1.local:8000');
         this.socket.on('init', function(data){
             //this.config = data;
