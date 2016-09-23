@@ -1,8 +1,20 @@
-import {Component, NgZone} from 'angular2/core';
+import {Component, Pipe, PipeTransform, NgZone} from 'angular2/core';
+
+@Pipe({name: 'keys'})
+export class KeysPipe implements PipeTransform {
+  transform(value, args:string[]) : any {
+    let keys = [];
+    for (let key in value) {
+      keys.push({key: key, value: value[key]});
+    }
+    return keys;
+  }
+}
 
 @Component({
     selector: 'smarthome-app',
-    templateUrl: 'templates/main.html'
+    templateUrl: 'templates/main.html',
+    pipes: [KeysPipe]
 })
 
 export class AppComponent {
@@ -13,7 +25,7 @@ export class AppComponent {
     //date = new Date();
 
     constructor(private zone:NgZone){
-        this.socket = io('http://192.168.1.6:8000');
+        this.socket = io('http://pictrl1.local:8000');
         this.socket.on('init', function(data){
             this.config = data;
         }.bind(this));
