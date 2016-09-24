@@ -1,7 +1,7 @@
 import {Component, Pipe, PipeTransform, NgZone} from 'angular2/core';
 
-import { Observable }     from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+//import { Observable }     from 'rxjs/Observable';
+//import { Subject } from 'rxjs/Subject';
 
 //declare var jsonfile : any;
 declare var _ :any;
