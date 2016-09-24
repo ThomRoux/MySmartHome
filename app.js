@@ -201,7 +201,7 @@ var configFromJSON = {
 };
 var config_json = {
   //'Cuisine': {type: 'LED', name: 'Cuisine', outputPin: 12, switchPin: 1},
-  'Light': {type: 'Light', name: 'Light', outputPin: 7, switchPin}
+  'Light': {type: 'Light', name: 'Light', outputPin: 7, switchPin: 11}
 };
 /*var config = _.mapObject(config_json, function(val, key) {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
