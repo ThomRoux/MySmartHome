@@ -185,13 +185,13 @@ var room = {
 };
 
 var configFromJSON = {
-  'LED': function(data) {
+  "LED": function(data) {
     return new LED(data.name, data.outputPin, data.switchPin);
-  }
-  'Light': function(data) {
+  },
+  "Light": function(data) {
     return new Light(data.name, data.outputPin, 0);
   }
-}
+};
 var config_json = {
   //'Cuisine': {type: 'LED', name: 'Cuisine', outputPin: 12, switchPin: 1},
   'Light': {type: 'Light', name: 'Light', outputPin: 7}
