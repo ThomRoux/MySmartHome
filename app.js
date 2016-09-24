@@ -95,7 +95,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
   _rpio.write(this.powerPin, rpio.HIGH);
-  this.rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_UP);
+  _rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_UP);
 
   this.toggle = function() {
     console.log("User toggled the light with the switch");
