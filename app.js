@@ -94,6 +94,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   _rpio = _rpio || rpio;
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
+  _rpio.write(this.powerPin, rpio.HIGH);
   //this.rpio.open(this.switchPin, rpio.INPUT);
 
   this.toggle = function() {
@@ -101,13 +102,13 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
     else this.turnOn();
   }
   this.turnOn = function() {
-    _rpio.write(this.powerPin, rpio.HIGH);
+    _rpio.write(this.powerPin, rpio.LOW);
     this.level = 100;
     this.on = true;
     io.emit('valueChanged',this);
   }
   this.turnOff = function() {
-    _rpio.write(this.powerPin, rpio.LOW);
+    _rpio.write(this.powerPin, rpio.HIGH);
     this.level = 0;
     this.on = false;
     io.emit('valueChanged',this);
