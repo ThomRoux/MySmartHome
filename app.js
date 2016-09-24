@@ -196,12 +196,12 @@ var config_json = {
   //'Cuisine': {type: 'LED', name: 'Cuisine', outputPin: 12, switchPin: 1},
   'Light': {type: 'Light', name: 'Light', outputPin: 7}
 };
-var config = _.mapObject(config_json, function(val, key) {
+/*var config = _.mapObject(config_json, function(val, key) {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
-});
-/*var config = {
-  'Cuisine': new LED('Cuisine',12,1,rpio)
-};*/
+});*/
+var config = {
+  'Light': new Light('Light',7,0)
+};
 
 
 io.on('connection', function (socket) {
