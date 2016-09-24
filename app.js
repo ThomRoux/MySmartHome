@@ -98,6 +98,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   //this.rpio.open(this.switchPin, rpio.INPUT);
 
   this.toggle = function() {
+    console.log("User toggled the light with the switch");
     if (this.on) this.turnOff();
     else this.turnOn();
   }
@@ -106,12 +107,14 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
     this.level = 100;
     this.on = true;
     io.emit('valueChanged',this);
+    console.log("Light is on");
   }
   this.turnOff = function() {
     _rpio.write(this.powerPin, rpio.HIGH);
     this.level = 0;
     this.on = false;
     io.emit('valueChanged',this);
+    console.log("Light is off");
   }
   this.dimmer = function(value) {
     if (value==0) this.turnOff();
