@@ -10,6 +10,7 @@ var app = express();
 var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+var _ = require('underscore');
 var rpio = {
   open : function(){},
   pwmSetClockDivider: function(){},
@@ -27,11 +28,11 @@ io.set("origins", "*:*");
 /*
   CONNECTION AU MODULE GPIO DU RASPBERRY
 */
-/*var rpio = require('rpio');
+var rpio = require('rpio');
 rpio.init({
   gpiomem: false,
   mapping: 'physical'
-});*/
+});
 
 /*
   DEFINITION DES OBJETS CONNECTES
@@ -91,7 +92,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   this.on = false;
 
   this.rpio.open(this.powerPin, rpio.OUTPUT);
-  this.rpio.open(this.switchPin, rpio.INPUT);
+  //this.rpio.open(this.switchPin, rpio.INPUT);
 
   this.toggle = function() {
     if (this.on) this.turnOff();
@@ -103,10 +104,15 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   }
   this.turnOff = function() {
     this.rpio.write(this.powerPin, rpio.LOW);
+    this.on = false;
+  }
+  this.dimmer = function(value) {
+    if (value==0) this.turnOff();
+    if (value==100) this.turnOn();
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  this.rpio.poll(this.switchPin, this.toggle, rpio.POLL_BOTH);
+  //this.rpio.poll(this.switchPin, this.toggle, rpio.POLL_BOTH);
 }
 
 var RGBLED = function(_name, _dimmerPins, _switchPin, _rpio) {
@@ -182,16 +188,20 @@ var configFromJSON = {
   'LED': function(data) {
     return new LED(data.name, data.outputPin, data.switchPin);
   }
+  'Light': function(data) {
+    return new Light(data.name, data.outputPin, 0);
+  }
 }
 var config_json = {
-  'Cuisine': {type: 'LED', name: 'Cuisine', outputPin: 12, switchPin: 1}
+  //'Cuisine': {type: 'LED', name: 'Cuisine', outputPin: 12, switchPin: 1},
+  'Light': {type: 'Light', name: 'Light', outputPin: 7}
 };
-/*var config = _.mapObject(config_json, function(val, key) {
+var config = _.mapObject(config_json, function(val, key) {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
-});*/
-var config = {
+});
+/*var config = {
   'Cuisine': new LED('Cuisine',12,1,rpio)
-};
+};*/
 
 
 io.on('connection', function (socket) {
