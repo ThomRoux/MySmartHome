@@ -95,7 +95,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
   _rpio.write(this.powerPin, rpio.HIGH);
-  _rpio.open(this.switchPin, rpio.INPUT);
+  _rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_UP);
 
   this.toggle = function() {
     _rpio.msleep(100);
@@ -125,7 +125,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
   //_rpio.poll(this.switchPin, null, rpio.POLL_BOTH);
-  _rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
+  //_rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
 }
 
 var RGBLED = function(_name, _dimmerPins, _switchPin, _rpio) {
@@ -213,7 +213,7 @@ var config_json = {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
 });*/
 var config = {
-  'Light': new Light('Light',7,3)
+  'Light': new Light('Light',7,11)
 };
 
 
