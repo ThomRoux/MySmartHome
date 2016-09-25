@@ -125,15 +125,17 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
     if (value==100) this.turnOn();
   }
 
-  // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  //_rpio.poll(this.switchPin, null, rpio.POLL_BOTH);
-  //_rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
-  this.poll = setInterval(function(){
+  this.checkSwitch = function(){
     if (_rpio.read(this.switchPin)!=this.switchValue) {
       this.toggle();
       this.switchValue = _rpio.read(this.switchPin);
     }
-  }.bind(this), 200);
+  }
+
+  // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
+  //_rpio.poll(this.switchPin, null, rpio.POLL_BOTH);
+  //_rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
+  this.poll = setInterval(this.checkSwitch, 200);
 }
 
 var RGBLED = function(_name, _dimmerPins, _switchPin, _rpio) {
