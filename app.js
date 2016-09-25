@@ -98,7 +98,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   _rpio.open(this.switchPin, rpio.INPUT);
 
   this.toggle = function() {
-    //_rpio.msleep(100);
+    _rpio.msleep(100);
     console.log(this.name,"toggled with switch");
     if (this.on) this.turnOff();
     else this.turnOn();
