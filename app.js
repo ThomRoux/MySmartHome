@@ -95,26 +95,27 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
   _rpio.write(this.powerPin, rpio.HIGH);
-  //_rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_UP);
+  _rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_UP);
 
   this.toggle = function() {
-    console.log("User toggled the light with the switch");
+    console.log(this.name,"toggled with switch");
     if (this.on) this.turnOff();
     else this.turnOn();
+    _rpio.msleep(200);
   }
   this.turnOn = function() {
     _rpio.write(this.powerPin, rpio.LOW);
     this.level = 100;
     this.on = true;
     io.emit('valueChanged',this);
-    console.log("Light is on");
+    console.log(this.name,"is on");
   }
   this.turnOff = function() {
     _rpio.write(this.powerPin, rpio.HIGH);
     this.level = 0;
     this.on = false;
     io.emit('valueChanged',this);
-    console.log("Light is off");
+    console.log(this.name,"is off");
   }
   this.dimmer = function(value) {
     if (value==0) this.turnOff();
@@ -122,7 +123,8 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  //_rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
+  _rpio.poll(this.switchPin, null, rpio.POLL_BOTH);
+  _rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
 }
 
 var RGBLED = function(_name, _dimmerPins, _switchPin, _rpio) {
