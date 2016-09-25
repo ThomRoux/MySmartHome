@@ -103,9 +103,8 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   this.toggle = function() {
     _rpio.msleep(100);
     console.log(this.name,"toggled with switch");
-    if (this.on) this.turnOff();
-    else this.turnOn();
-
+    //if (this.on) this.turnOff();
+    //else this.turnOn();
   }
   this.turnOn = function() {
     _rpio.write(this.powerPin, rpio.LOW);
