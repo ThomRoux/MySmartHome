@@ -95,10 +95,10 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
   _rpio.write(this.powerPin, rpio.HIGH);
-  _rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_UP);
+  _rpio.open(this.switchPin, rpio.INPUT);
 
   this.toggle = function() {
-    _rpio.msleep(100);
+    //_rpio.msleep(100);
     console.log(this.name,"toggled with switch");
     if (this.on) this.turnOff();
     else this.turnOn();
@@ -213,7 +213,7 @@ var config_json = {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
 });*/
 var config = {
-  'Light': new Light('Light',7,11)
+  'Light': new Light('Light',7,3)
 };
 
 
