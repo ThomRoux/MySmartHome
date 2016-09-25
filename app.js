@@ -85,6 +85,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio, _io) {
 }
 
 var Light = function(_name, _powerPin, _switchPin, _rpio) {
+  var _this = this;
   this.name = _name;
   this.type = 'Light';
   this.powerPin = _powerPin;
@@ -126,9 +127,9 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   }
 
   this.checkSwitch = function(){
-    if (_rpio.read(this.switchPin)!=this.switchValue) {
-      this.toggle();
-      this.switchValue = _rpio.read(this.switchPin);
+    if (_rpio.read(_this.switchPin)!=_this.switchValue) {
+      _this.toggle();
+      _this.switchValue = _rpio.read(_this.switchPin);
     }
   }
 
