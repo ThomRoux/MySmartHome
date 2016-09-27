@@ -93,7 +93,6 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   this.on = false;
   this.level = 0;
   this.lastSwitch = 0;
-  this.switchValue = _rpio.LOW;
 
   _rpio = _rpio || rpio;
   this.switchValue = _rpio.LOW;
