@@ -92,19 +92,25 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   this.switchPin = _switchPin;
   this.on = false;
   this.level = 0;
+  this.lastSwitch = 0;
+  this.switchValue = _rpio.LOW;
 
   _rpio = _rpio || rpio;
   this.switchValue = _rpio.LOW;
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
   _rpio.write(this.powerPin, rpio.HIGH);
-  _rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_UP);
+  _rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_DOWN);
 
   this.toggle = function() {
-    _rpio.msleep(100);
-    console.log(this.name,"toggled with switch");
-    //if (this.on) this.turnOff();
-    //else this.turnOn();
+    /*var dt = new Date();
+    if (dt-this.lastSwitch > 200) {
+      console.log(this.name,"toggled with switch");
+      this.lastSwitch = dt;
+    }*/
+
+    if (this.on) this.turnOff();
+    else this.turnOn();
   }
   this.turnOn = function() {
     _rpio.write(this.powerPin, rpio.LOW);
