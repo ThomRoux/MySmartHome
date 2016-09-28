@@ -102,12 +102,13 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   _rpio.open(this.switchPin, rpio.INPUT);
 
   this.toggle = function() {
-    /*var dt = new Date();
+    //console.log(this.name,"toggled with switch");
+    var dt = new Date();
     if (dt-this.lastSwitch > 200) {
-      console.log(this.name,"toggled with switch");
+      console.log(new Date(),this.name,"toggled with switch");
       this.lastSwitch = dt;
-    }*/
-    console.log(new Date(),this.name," turned on with switch");
+    }
+
     //if (this.on) this.turnOff();
     //else this.turnOn();
   }
