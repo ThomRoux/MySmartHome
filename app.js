@@ -99,7 +99,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
   _rpio.write(this.powerPin, rpio.HIGH);
-  _rpio.open(this.switchPin, rpio.INPUTrpio.PULL_UP);
+  _rpio.open(this.switchPin, rpio.INPUT,rpio.PULL_UP);
 
   this.toggle = function() {
     var dt = new Date();
