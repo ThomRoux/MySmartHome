@@ -139,7 +139,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
   //_rpio.poll(this.switchPin, null, rpio.POLL_BOTH);
-  //_rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
+  _rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
   //this.poll = setInterval(this.checkSwitch, 200);
 }
 
