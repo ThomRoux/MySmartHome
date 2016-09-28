@@ -107,23 +107,23 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
       console.log(this.name,"toggled with switch");
       this.lastSwitch = dt;
     }*/
-    console.log(this.name," turned on with switch");
-    if (this.on) this.turnOff();
-    else this.turnOn();
+    console.log(new Date(),this.name," turned on with switch");
+    //if (this.on) this.turnOff();
+    //else this.turnOn();
   }
   this.turnOn = function() {
     _rpio.write(this.powerPin, rpio.LOW);
     this.level = 100;
     this.on = true;
     io.emit('valueChanged',this);
-    console.log(this.name,"is on");
+    console.log(new Date(),this.name,"is on");
   }
   this.turnOff = function() {
     _rpio.write(this.powerPin, rpio.HIGH);
     this.level = 0;
     this.on = false;
     io.emit('valueChanged',this);
-    console.log(this.name,"is off");
+    console.log(new Date(),this.name,"is off");
   }
   this.dimmer = function(value) {
     if (value==0) this.turnOff();
