@@ -107,7 +107,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
       console.log(this.name,"toggled with switch");
       this.lastSwitch = dt;
     }*/
-
+    console.log(this.name," turned on with switch");
     if (this.on) this.turnOff();
     else this.turnOn();
   }
