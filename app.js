@@ -105,8 +105,15 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
     //console.log(this.name,"toggled with switch");
     var dt = new Date();
     if (dt-this.lastSwitch > 200) {
-      console.log(new Date(),this.name,"toggled with switch");
-      this.lastSwitch = dt;
+      _rpio.msleep(20);
+      if (_rpio.read(_this.switchPin)!=_this.switchValue) {
+        //_this.toggle();
+        this.lastSwitch = dt;
+        _this.switchValue = _rpio.read(_this.switchPin);
+        console.log(new Date(),this.name,"toggled with switch", this.switchValue);
+
+      }
+
     }
 
     //if (this.on) this.turnOff();
@@ -129,13 +136,6 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   this.dimmer = function(value) {
     if (value==0) this.turnOff();
     if (value==100) this.turnOn();
-  }
-
-  this.checkSwitch = function(){
-    if (_rpio.read(_this.switchPin)!=_this.switchValue) {
-      _this.toggle();
-      _this.switchValue = _rpio.read(_this.switchPin);
-    }
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
