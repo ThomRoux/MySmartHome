@@ -99,7 +99,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
   _rpio.write(this.powerPin, rpio.HIGH);
-  _rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_DOWN);
+  _rpio.open(this.switchPin, rpio.INPUT);
 
   this.toggle = function() {
     /*var dt = new Date();
@@ -139,7 +139,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
   //_rpio.poll(this.switchPin, null, rpio.POLL_BOTH);
-  //_rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
+  _rpio.poll(this.switchPin, this.toggle.bind(this), rpio.POLL_BOTH);
   //this.poll = setInterval(this.checkSwitch, 200);
 }
 
