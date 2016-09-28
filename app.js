@@ -99,17 +99,16 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
 
   _rpio.open(this.powerPin, rpio.OUTPUT);
   _rpio.write(this.powerPin, rpio.HIGH);
-  _rpio.open(this.switchPin, rpio.INPUT);
+  _rpio.open(this.switchPin, rpio.INPUTrpio.PULL_UP);
 
   this.toggle = function() {
-    //console.log(this.name,"toggled with switch");
     var dt = new Date();
     if (dt-this.lastSwitch > 200) {
       _rpio.msleep(20);
       if (_rpio.read(_this.switchPin)!=_this.switchValue) {
         this.lastSwitch = dt;
         _this.switchValue = _rpio.read(_this.switchPin);
-        console.log(new Date(),this.name,"toggled with switch", this.switchValue);
+        console.log(new Date(),this.name,"toggled with switch");
         if (this.on) this.turnOff();
         else this.turnOn();
       }
