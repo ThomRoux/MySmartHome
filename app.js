@@ -115,11 +115,12 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   this.on = false;
   this.level = 0;
   this.lastSwitch = 0;
-  this.switchValue = _rpio.LOW;
+
 
   _rpio.open(this.powerPin, _rpio.OUTPUT);
   _rpio.write(this.powerPin, _rpio.HIGH);
   _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
+  this.switchValue = _rpio.read(this.switchPin);
 
   this.toggle = function() {
     var dt = new Date();
