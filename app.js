@@ -128,7 +128,7 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
       if (_rpio.read(_this.switchPin)!=_this.switchValue) {
         this.lastSwitch = dt;
         _this.switchValue = _rpio.read(_this.switchPin);
-        console.log(new Date(),this.name,"toggled with switch");
+        console.log((new Date()).toTimeString().slice(0, 8),this.name,"toggled with switch");
         if (this.on) this.turnOff();
         else this.turnOn();
       }
@@ -139,14 +139,14 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
     this.level = 100;
     this.on = true;
     io.emit('valueChanged',this);
-    console.log(new Date(),this.name,"is on");
+    console.log((new Date()).toTimeString().slice(0, 8),this.name,"is on");
   }
   this.turnOff = function() {
     _rpio.write(this.powerPin, _rpio.HIGH);
     this.level = 0;
     this.on = false;
     io.emit('valueChanged',this);
-    console.log(new Date(),this.name,"is off");
+    console.log((new Date()).toTimeString().slice(0, 8),this.name,"is off");
   }
   this.dimmer = function(value) {
     if (value==0) this.turnOff();
