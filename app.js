@@ -170,8 +170,8 @@ var Motor = function(_name, _powerPins, _switchPins, _rpio) {
   this.level = 0;
   this.lastSwitch = 0;
   this.switchValues = {
-    _switchPins[0]: _rpio.read(_switchPins[0]),
-    _switchPins[1]: _rpio.read(_switchPins[1])
+    //_switchPins[0]: _rpio.read(_switchPins[0]),
+    //_switchPins[1]: _rpio.read(_switchPins[1])
   };
 
   _rpio.open(this.powerPin, _rpio.OUTPUT);
