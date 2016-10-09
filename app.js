@@ -58,11 +58,11 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.lastSwitch = 0;
   this.switchValue = _rpio.LOW;
 
-  _rpio.open(this.outputPin, rpio.PWM);
+  _rpio.open(this.outputPin, _rpio.PWM);
   _rpio.pwmSetClockDivider(32);
   _rpio.pwmSetRange(this.outputPin, 1024);
   _rpio.pwmSetData(this.outputPin, 0);
-  _rpio.open(this.switchPin, rpio.INPUT, rpio.PULL_UP);
+  _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
 
   this.toggle = function() {
     var dt = new Date();
@@ -71,7 +71,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
       if (_rpio.read(_this.switchPin)!=_this.switchValue) {
         this.lastSwitch = dt;
         _this.switchValue = _rpio.read(_this.switchPin);
-        console.log(new Date(),this.name,"toggled with switch");
+        console.log(new Date().toTimeString().slice(0, 8),this.name,"toggled with switch");
         if (this.on) this.turnOff();
         else this.turnOn();
       }
@@ -83,25 +83,25 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     this.on = true;
     this.level = 100;
     io.emit('valueChanged',this);
-    console.log(new Date(), this.name, "turned on");
+    console.log(new Date().toTimeString().slice(0, 8), this.name, "turned on");
   }
   this.turnOff = function() {
     _rpio.pwmSetData(this.outputPin, 0);
     this.on = false;
     this.level = 0;
     io.emit('valueChanged',this);
-    console.log(new Date(), this.name, "turned off");
+    console.log(new Date().toTimeString().slice(0, 8), this.name, "turned off");
   }
   this.dimmer = function(value) {
     _rpio.pwmSetData(this.outputPin, Math.round(value*1024/100));
     this.level = value;
     this.on = (value>0);
     io.emit('valueChanged',this);
-    console.log(new Date(), this.name, "dimmed to value", this.level);
+    console.log(new Date().toTimeString().slice(0, 8), this.name, "dimmed to value", this.level);
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  _rpio.poll(this.switchPin, this.toggle, rpio.POLL_BOTH);
+  _rpio.poll(this.switchPin, this.toggle, _rpio.POLL_BOTH);
   io.emit("valueChanged", this);
 }
 
