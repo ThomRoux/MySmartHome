@@ -82,21 +82,21 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     _rpio.pwmSetData(this.outputPin, 1024);
     this.on = true;
     this.level = 100;
-    _io.emit('valueChanged',this);
+    io.emit('valueChanged',this);
     console.log(new Date(), this.name, "turned on");
   }
   this.turnOff = function() {
     _rpio.pwmSetData(this.outputPin, 0);
     this.on = false;
     this.level = 0;
-    _io.emit('valueChanged',this);
+    io.emit('valueChanged',this);
     console.log(new Date(), this.name, "turned off");
   }
   this.dimmer = function(value) {
     _rpio.pwmSetData(this.outputPin, Math.round(value*1024/100));
     this.level = value;
     this.on = (value>0);
-    _io.emit('valueChanged',this);
+    io.emit('valueChanged',this);
     console.log(new Date(), this.name, "dimmed to value", this.value);
   }
 
