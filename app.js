@@ -97,7 +97,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     this.level = value;
     this.on = (value>0);
     io.emit('valueChanged',this);
-    console.log(new Date(), this.name, "dimmed to value", this.value);
+    console.log(new Date(), this.name, "dimmed to value", this.level);
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
