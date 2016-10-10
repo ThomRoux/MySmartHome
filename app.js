@@ -19,7 +19,7 @@ io.set("origins", "*:*");
 */
 var rpio = require('rpio');
 rpio.init({
-  gpiomem: false,
+  gpiomem: true,
   mapping: 'physical'
 });
 
