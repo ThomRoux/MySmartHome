@@ -58,6 +58,8 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.on = false;
   this.lastSwitch = 0;
   this.switchValue = _rpio.LOW;
+  this.clock = 32;
+  this.range = 1024;
 
   //_rpio.open(this.outputPin, _rpio.OUTPUT, _rpio.LOW);
   _rpio.open(this.outputPin, _rpio.PWM);
@@ -65,6 +67,13 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   _rpio.pwmSetRange(this.outputPin, 1024);
   _rpio.pwmSetData(this.outputPin, 0);
   _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
+
+  this.setClock = function(clock){
+    _rpio.pwmSetClockDivider(clock);
+  }
+  this.setRange = function(range) {
+    _rpio.pwmSetRange(range);
+  }
 
   this.toggle = function() {
     var dt = new Date();
@@ -294,6 +303,12 @@ io.on('connection', function (socket) {
   socket.emit('init', config);
   socket.on('valueChanged', function(data){
     config[data.id].dimmer(data.value);
+  });
+  socket.on('clockChanged', function(data){
+    config[data.id].setClock(data.value);
+  });
+  socket.on('rangeChanged', function(data){
+    config[data.id].setRange(data.value);
   });
   socket.on('addDevice', function(data){ // data = {type:, name:, outputPin: switchPin:}
     config_json[data.name] = data;
