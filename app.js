@@ -49,6 +49,7 @@ MyBox = {
 */
 var LED = function(_name, _outputPin, _switchPin, _rpio) {
   _rpio = _rpio || rpio;
+  var _this = this;
   this.name = _name;
   this.type = 'LED';
   this.outputPin = _outputPin;
@@ -69,8 +70,8 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     if (dt-this.lastSwitch > 200) {
       _rpio.msleep(20);
       if (_rpio.read(_this.switchPin)!=_this.switchValue) {
-        this.lastSwitch = dt;
-        _this.switchValue = _rpio.read(_this.switchPin);
+        _this.lastSwitch = dt;
+        this.switchValue = _rpio.read(_this.switchPin);
         console.log(new Date().toTimeString().slice(0, 8),this.name,"toggled with switch");
         if (this.on) this.turnOff();
         else this.turnOn();
