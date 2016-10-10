@@ -62,7 +62,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   _rpio.open(this.outputPin, _rpio.PWM);
   _rpio.pwmSetClockDivider(64);
   _rpio.pwmSetRange(this.outputPin, 1024);
-  _rpio.pwmSetData(this.outputPin, 0);
+  _rpio.pwmSetData(this.outputPin, 512);
   _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
 
   this.toggle = function() {
