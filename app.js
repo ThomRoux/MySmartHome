@@ -59,7 +59,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.switchValue = _rpio.LOW;
 
   _rpio.open(this.outputPin, _rpio.PWM);
-  _rpio.pwmSetClockDivider(32);
+  _rpio.pwmSetClockDivider(64);
   _rpio.pwmSetRange(this.outputPin, 1024);
   _rpio.pwmSetData(this.outputPin, 0);
   _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
@@ -101,7 +101,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  _rpio.poll(this.switchPin, this.toggle, _rpio.POLL_BOTH);
+  _rpio.poll(this.switchPin, this.toggle.bind(this), _rpio.POLL_BOTH);
   io.emit("valueChanged", this);
 }
 
@@ -278,8 +278,8 @@ var config_json = {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
 });*/
 var config = {
-  'Light': new Light('Light',7,11),
-  'LED': new LED('LED',12,13)
+  'Light': new Light('Light',7,13),
+  'LED': new LED('LED',12,11)
 };
 
 
