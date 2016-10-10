@@ -99,7 +99,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.dimmer = function(value) {
     //if (value==0) _rpio.write(this.outputPin, _rpio.HIGH);
     //else _rpio.write(this.outputPin, _rpio.LOW);
-    _rpio.pwmSetData(this.outputPin, value+0);
+    _rpio.pwmSetData(this.outputPin, Math.round(value*10.24));
     this.level = value;
     this.on = (value>0);
     io.emit('valueChanged',this);
