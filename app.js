@@ -59,6 +59,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.lastSwitch = 0;
   this.switchValue = _rpio.LOW;
 
+  _rpio.open(this.outputPin, _rpio.OUTPUT, _rpio.LOW);
   _rpio.open(this.outputPin, _rpio.PWM);
   _rpio.pwmSetClockDivider(64);
   _rpio.pwmSetRange(this.outputPin, 1024);
