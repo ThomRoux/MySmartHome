@@ -36,7 +36,8 @@
     "socket.io":"1.4.5",
     "underscore":"*",
     "jsonfile":"^2.4.0",
-    "rpio":"^0.9.12"
+    "rpio":"^0.9.12",
+    "pigpio": "*"
   },
   "devDependencies": {
     "concurrently": "^1.0.0",

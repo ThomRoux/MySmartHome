@@ -22,6 +22,7 @@ rpio.init({
   gpiomem: false,
   mapping: 'physical'
 });
+var Gpio = require('pigpio').Gpio;
 
 /*
   CONFIGURATION DE LA BOX
@@ -49,23 +50,26 @@ MyBox = {
 */
 var LED = function(_name, _outputPin, _switchPin, _rpio) {
   _rpio = _rpio || rpio;
+  this.clock = 32;
+  this.range = 100;
   var _this = this;
   this.name = _name;
   this.type = 'LED';
   this.outputPin = _outputPin;
   this.switchPin = _switchPin;
-  this.level = 2048;
+  this.level = this.range;
   this.on = (this.level>0);
   this.lastSwitch = 0;
   this.switchValue = _rpio.LOW;
-  this.clock = 32;
-  this.range = 100;
+  this.pwm = new Gpio(this.outputPin, {mode: Gpio.OUTPUT});
+
 
   //_rpio.open(this.outputPin, _rpio.OUTPUT, _rpio.LOW);
-  _rpio.open(this.outputPin, _rpio.PWM);
+  /*_rpio.open(this.outputPin, _rpio.PWM);
   _rpio.pwmSetClockDivider(this.clock);
   _rpio.pwmSetRange(this.outputPin, this.range);
-  _rpio.pwmSetData(this.outputPin, this.range);
+  _rpio.pwmSetData(this.outputPin, this.range);*/
+  this.pwm.pwmWrite(0);
   _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
 
   this.setClock = function(clock){
@@ -92,23 +96,26 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   }
 
   this.turnOn = function() {
-    _rpio.pwmSetData(this.outputPin, this.range);
+    //_rpio.pwmSetData(this.outputPin, this.range);
     //_rpio.write(this.outputPin, _rpio.LOW);
+    this.pwm.pwmWrite(255);
     this.on = true;
     this.level = 100;
     io.emit('valueChanged',this);
     console.log(new Date().toTimeString().slice(0, 8), this.name, "turned on");
   }
   this.turnOff = function() {
-    _rpio.pwmSetData(this.outputPin, 0);
+    //_rpio.pwmSetData(this.outputPin, 0);
     //_rpio.write(this.outputPin, _rpio.HIGH);
+    this.pwm.pwmWrite(0);
     this.on = false;
     this.level = 0;
     io.emit('valueChanged',this);
     console.log(new Date().toTimeString().slice(0, 8), this.name, "turned off");
   }
   this.dimmer = function(value) {
-    _rpio.pwmSetData(this.outputPin, Math.round(0.01*value*this.range));
+    //_rpio.pwmSetData(this.outputPin, Math.round(0.01*value*this.range));
+    this.pwm.pwmWrite(Math.round(0.01*value*255));
     this.level = Math.round(value);
     this.on = (value>0);
     io.emit('valueChanged',this);
