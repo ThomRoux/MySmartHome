@@ -74,7 +74,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   }
   this.setRange = function(range) {
     this.range = range;
-    _rpio.pwmSetRange(range);
+    _rpio.pwmSetRange(this.outputPin, range);
   }
 
   this.toggle = function() {
