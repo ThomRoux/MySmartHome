@@ -69,9 +69,11 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
 
   this.setClock = function(clock){
+    this.clock = clock;
     _rpio.pwmSetClockDivider(clock);
   }
   this.setRange = function(range) {
+    this.range = range;
     _rpio.pwmSetRange(range);
   }
 
@@ -305,11 +307,11 @@ io.on('connection', function (socket) {
     config[data.id].dimmer(data.value);
   });
   socket.on('clockChanged', function(data){
-    console.info(data);
+    console.info(data, typeof data.value);
     config[data.id].setClock(data.value);
   });
   socket.on('rangeChanged', function(data){
-    console.info(data);
+    console.info(data, typeof data.value);
     config[data.id].setRange(data.value);
   });
   socket.on('addDevice', function(data){ // data = {type:, name:, outputPin: switchPin:}
