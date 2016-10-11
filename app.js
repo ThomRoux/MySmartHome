@@ -301,7 +301,7 @@ var config_json = {
 });*/
 var config = {
   'Light': new Light('Light',7,11),
-  'LED': new LED('LED',18,13)
+  'LED': new LED('LED',12,13)
 };
 
 
