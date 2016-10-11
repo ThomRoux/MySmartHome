@@ -54,8 +54,8 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.type = 'LED';
   this.outputPin = _outputPin;
   this.switchPin = _switchPin;
-  this.level = 0;
-  this.on = false;
+  this.level = 50;
+  this.on = (this.level>0);
   this.lastSwitch = 0;
   this.switchValue = _rpio.LOW;
   this.clock = 32;
@@ -65,7 +65,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   _rpio.open(this.outputPin, _rpio.PWM);
   _rpio.pwmSetClockDivider(32);
   _rpio.pwmSetRange(this.outputPin, 1024);
-  _rpio.pwmSetData(this.outputPin, 0);
+  //_rpio.pwmSetData(this.outputPin, 512);
   _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
 
   this.setClock = function(clock){
@@ -111,7 +111,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     //if (value==0) _rpio.write(this.outputPin, _rpio.HIGH);
     //else _rpio.write(this.outputPin, _rpio.LOW);
     //console.log("DEBUG", Math.round(value*10.24));
-    _rpio.pwmSetData(this.outputPin, Math.round(value*10.24));
+    _rpio.pwmSetData(this.outputPin, Math.round(value*1.28));
     this.level = value;
     this.on = (value>0);
     io.emit('valueChanged',this);
