@@ -111,7 +111,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     //if (value==0) _rpio.write(this.outputPin, _rpio.HIGH);
     //else _rpio.write(this.outputPin, _rpio.LOW);
     //console.log("DEBUG", Math.round(value*10.24));
-    _rpio.pwmSetData(this.outputPin, Math.round(value*1.28));
+    _rpio.pwmSetData(this.outputPin, this.level+10);
     this.level = value;
     this.on = (value>0);
     io.emit('valueChanged',this);
