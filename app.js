@@ -59,13 +59,13 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.lastSwitch = 0;
   this.switchValue = _rpio.LOW;
   this.clock = 32;
-  this.range = 1024;
+  this.range = 100;
 
   //_rpio.open(this.outputPin, _rpio.OUTPUT, _rpio.LOW);
   _rpio.open(this.outputPin, _rpio.PWM);
-  _rpio.pwmSetClockDivider(16);
-  _rpio.pwmSetRange(this.outputPin, 2048);
-  _rpio.pwmSetData(this.outputPin, 2048);
+  _rpio.pwmSetClockDivider(this.clock);
+  _rpio.pwmSetRange(this.outputPin, this.range);
+  _rpio.pwmSetData(this.outputPin, this.range);
   _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
 
   this.setClock = function(clock){
@@ -92,7 +92,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   }
 
   this.turnOn = function() {
-    _rpio.pwmSetData(this.outputPin, 2048);
+    _rpio.pwmSetData(this.outputPin, this.range);
     //_rpio.write(this.outputPin, _rpio.LOW);
     this.on = true;
     this.level = 100;
@@ -108,7 +108,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     console.log(new Date().toTimeString().slice(0, 8), this.name, "turned off");
   }
   this.dimmer = function(value) {
-    _rpio.pwmSetData(this.outputPin, Math.round(value*20.48));
+    _rpio.pwmSetData(this.outputPin, Math.round(0.01*value*this.range));
     this.level = Math.round(value);
     this.on = (value>0);
     io.emit('valueChanged',this);
