@@ -305,9 +305,11 @@ io.on('connection', function (socket) {
     config[data.id].dimmer(data.value);
   });
   socket.on('clockChanged', function(data){
+    console.debug(data);
     config[data.id].setClock(data.value);
   });
   socket.on('rangeChanged', function(data){
+    console.debug(data);
     config[data.id].setRange(data.value);
   });
   socket.on('addDevice', function(data){ // data = {type:, name:, outputPin: switchPin:}
