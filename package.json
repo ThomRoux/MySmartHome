@@ -13,7 +13,7 @@
     "postinstall": "npm run typings install",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "start": "concurrent \"node ./bin/www\" \"npm run tsc:w\"",
+    "start": "concurrent \"sudo node ./bin/www\" \"sudo npm run tsc:w\"",
     "typings" : "typings"
   },
   "license": "ISC",
