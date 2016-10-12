@@ -115,7 +115,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   }
   this.dimmer = function(value) {
     //_rpio.pwmSetData(this.outputPin, Math.round(0.01*value*this.range));
-    this.pwm.pwmWrite(Math.round(0.01*value*255));
+    this.pwm.pwmWrite(Math.floor(value*2.55));
     this.level = Math.round(value);
     this.on = (value>0);
     io.emit('valueChanged',this);
@@ -301,7 +301,7 @@ var config_json = {
 });*/
 var config = {
   'Light': new Light('Light',7,11),
-  'LED': new LED('LED',12,13)
+  'LED': new LED('LED',18,13)
 };
 
 
