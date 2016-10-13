@@ -66,7 +66,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     edge: Gpio.EITHER_EDGE
   });
   this.switchValue = this.switch.digitalRead();
-  this.switch.on('interrupt', this.toggle.bind(this));
+
 
   this.pwm.pwmWrite(0);
   //_rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
@@ -110,7 +110,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
   //_rpio.poll(this.switchPin, this.toggle.bind(this), _rpio.POLL_BOTH);
-
+  this.switch.on('interrupt', this.toggle.bind(this));
   io.emit("valueChanged", this);
 }
 
