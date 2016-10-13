@@ -296,7 +296,7 @@ var config_json = {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
 });*/
 var config = {
-  'Light': new Light('Light',7,13),
+  'Light': new Light('Light',4,13),
   'LED': new LED('LED',18,17)
 };
 
