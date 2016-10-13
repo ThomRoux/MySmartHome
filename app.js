@@ -58,23 +58,20 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.level = this.range;
   this.on = (this.level>0);
   this.lastSwitch = 0;
-  //this.switchValue = _rpio.LOW;
+  // OUTPUT Pin and INPUT Pin are created
   this.pwm = new Gpio(this.outputPin, {mode: Gpio.OUTPUT});
   this.switch = new Gpio(this.switchPin, {
     mode: Gpio.INPUT,
     pullUpDown: Gpio.PUD_UP,
     edge: Gpio.EITHER_EDGE
   });
+
   this.switchValue = this.switch.digitalRead();
-
-
   this.pwm.pwmWrite(0);
-  //_rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
 
   this.toggle = function(level) {
     var dt = new Date();
     if (dt-this.lastSwitch > 200) {
-      //_rpio.msleep(20);
       setTimeout(function(){}, 20);
       if (level!=_this.switchValue) {
         _this.lastSwitch = dt;
@@ -109,7 +106,6 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  //_rpio.poll(this.switchPin, this.toggle.bind(this), _rpio.POLL_BOTH);
   this.switch.on('interrupt', this.toggle.bind(this));
   io.emit("valueChanged", this);
 }
@@ -125,19 +121,29 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   this.level = 0;
   this.lastSwitch = 0;
 
+  this.out = new Gpio(this.powerPin, {mode: Gpio.OUTPUT});
+  this.switch = new Gpio(this.switchPin, {
+    mode: Gpio.INPUT,
+    pullUpDown: Gpio.PUD_UP,
+    edge: Gpio.EITHER_EDGE
+  });
 
-  _rpio.open(this.powerPin, _rpio.OUTPUT);
-  _rpio.write(this.powerPin, _rpio.HIGH);
-  _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
-  this.switchValue = _rpio.read(this.switchPin);
+  this.switchValue = this.switch.digitalRead();
+  this.out.digitalWrite(this.on==100?0:1);
 
-  this.toggle = function() {
+  //_rpio.open(this.powerPin, _rpio.OUTPUT);
+  //_rpio.write(this.powerPin, _rpio.HIGH);
+  //_rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
+  //this.switchValue = _rpio.read(this.switchPin);
+
+  this.toggle = function(level) {
     var dt = new Date();
     if (dt-this.lastSwitch > 200) {
-      _rpio.msleep(20);
-      if (_rpio.read(_this.switchPin)!=_this.switchValue) {
+      //_rpio.msleep(20);
+      setTimeout(function(){}, 20);
+      if (level!=_this.switchValue) {
         this.lastSwitch = dt;
-        _this.switchValue = _rpio.read(_this.switchPin);
+        _this.switchValue = level;
         console.log((new Date()).toTimeString().slice(0, 8),this.name,"toggled with switch");
         if (this.on) this.turnOff();
         else this.turnOn();
@@ -145,14 +151,16 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
     }
   }
   this.turnOn = function() {
-    _rpio.write(this.powerPin, _rpio.LOW);
+    //_rpio.write(this.powerPin, _rpio.LOW);
+    this.out.digitalWrite(0);
     this.level = 100;
     this.on = true;
     io.emit('valueChanged',this);
     console.log((new Date()).toTimeString().slice(0, 8),this.name,"is on");
   }
   this.turnOff = function() {
-    _rpio.write(this.powerPin, _rpio.HIGH);
+    //_rpio.write(this.powerPin, _rpio.HIGH);
+    this.out.digitalWrite(1);
     this.level = 0;
     this.on = false;
     io.emit('valueChanged',this);
@@ -164,7 +172,8 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  _rpio.poll(this.switchPin, this.toggle.bind(this), _rpio.POLL_BOTH);
+  //_rpio.poll(this.switchPin, this.toggle.bind(this), _rpio.POLL_BOTH);
+  this.switch.on('interrupt', this.toggle.bind(this));
   io.emit("valueChanged", this);
 }
 
