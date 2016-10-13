@@ -49,9 +49,7 @@ MyBox = {
   DEFINITION DES OBJETS CONNECTES
 */
 var LED = function(_name, _outputPin, _switchPin, _rpio) {
-  _rpio = _rpio || rpio;
-  this.clock = 32;
-  this.range = 100;
+  //_rpio = _rpio || rpio;
   var _this = this;
   this.name = _name;
   this.type = 'LED';
@@ -62,32 +60,24 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.lastSwitch = 0;
   this.switchValue = _rpio.LOW;
   this.pwm = new Gpio(this.outputPin, {mode: Gpio.OUTPUT});
+  this.switch = new Gpio(this.switchPin, {
+    mode: Gpio.INPUT,
+    pullUpDown: Gpio.PUD_UP,
+    edge: Gpio.EITHER_EDGE
+  });
+  this.switch.on('interrupt', this.toggle.bind(this));
 
-
-  //_rpio.open(this.outputPin, _rpio.OUTPUT, _rpio.LOW);
-  /*_rpio.open(this.outputPin, _rpio.PWM);
-  _rpio.pwmSetClockDivider(this.clock);
-  _rpio.pwmSetRange(this.outputPin, this.range);
-  _rpio.pwmSetData(this.outputPin, this.range);*/
   this.pwm.pwmWrite(0);
-  _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
+  //_rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
 
-  this.setClock = function(clock){
-    this.clock = clock;
-    _rpio.pwmSetClockDivider(clock);
-  }
-  this.setRange = function(range) {
-    this.range = range;
-    _rpio.pwmSetRange(this.outputPin, range);
-  }
-
-  this.toggle = function() {
+  this.toggle = function(level) {
     var dt = new Date();
     if (dt-this.lastSwitch > 200) {
-      _rpio.msleep(20);
-      if (_rpio.read(_this.switchPin)!=_this.switchValue) {
+      //_rpio.msleep(20);
+      setTimeout(null, 20);
+      if (level!=_this.switchValue) {
         _this.lastSwitch = dt;
-        this.switchValue = _rpio.read(_this.switchPin);
+        this.switchValue = level;
         console.log(new Date().toTimeString().slice(0, 8),this.name,"toggled with switch");
         if (this.on) this.turnOff();
         else this.turnOn();
@@ -96,8 +86,6 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   }
 
   this.turnOn = function() {
-    //_rpio.pwmSetData(this.outputPin, this.range);
-    //_rpio.write(this.outputPin, _rpio.LOW);
     this.pwm.pwmWrite(255);
     this.on = true;
     this.level = 100;
@@ -105,8 +93,6 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     console.log(new Date().toTimeString().slice(0, 8), this.name, "turned on");
   }
   this.turnOff = function() {
-    //_rpio.pwmSetData(this.outputPin, 0);
-    //_rpio.write(this.outputPin, _rpio.HIGH);
     this.pwm.pwmWrite(0);
     this.on = false;
     this.level = 0;
@@ -114,7 +100,6 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     console.log(new Date().toTimeString().slice(0, 8), this.name, "turned off");
   }
   this.dimmer = function(value) {
-    //_rpio.pwmSetData(this.outputPin, Math.round(0.01*value*this.range));
     this.pwm.pwmWrite(Math.floor(value*2.55));
     this.level = Math.round(value);
     this.on = (value>0);
@@ -123,7 +108,8 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  _rpio.poll(this.switchPin, this.toggle.bind(this), _rpio.POLL_BOTH);
+  //_rpio.poll(this.switchPin, this.toggle.bind(this), _rpio.POLL_BOTH);
+
   io.emit("valueChanged", this);
 }
 
@@ -300,8 +286,8 @@ var config_json = {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
 });*/
 var config = {
-  'Light': new Light('Light',7,11),
-  'LED': new LED('LED',18,13)
+  'Light': new Light('Light',7,13),
+  'LED': new LED('LED',18,17)
 };
 
 
