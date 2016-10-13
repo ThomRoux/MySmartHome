@@ -75,7 +75,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
     var dt = new Date();
     if (dt-this.lastSwitch > 200) {
       //_rpio.msleep(20);
-      setTimeout(null, 20);
+      setTimeout(function(){}, 20);
       if (level!=_this.switchValue) {
         _this.lastSwitch = dt;
         this.switchValue = level;
