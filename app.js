@@ -58,13 +58,14 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   this.level = this.range;
   this.on = (this.level>0);
   this.lastSwitch = 0;
-  this.switchValue = _rpio.LOW;
+  //this.switchValue = _rpio.LOW;
   this.pwm = new Gpio(this.outputPin, {mode: Gpio.OUTPUT});
   this.switch = new Gpio(this.switchPin, {
     mode: Gpio.INPUT,
     pullUpDown: Gpio.PUD_UP,
     edge: Gpio.EITHER_EDGE
   });
+  this.switchValue = this.switch.digitalRead();
   this.switch.on('interrupt', this.toggle.bind(this));
 
   this.pwm.pwmWrite(0);
