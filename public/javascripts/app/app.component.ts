@@ -34,36 +34,14 @@ export class AppComponent {
     config : any = {};
     //config = {};
 
+    device : any = {};
+
     constructor(private zone:NgZone){
         //this.config = jsonfile.readFileSync('/config.json');
         //console.log(this.config);
         this.socket = io('http://pictrl1.local:8000');
         this.socket.on('init', function(data){
             this.config = _.clone(data);
-            //this._config.next(data);
         }.bind(this));
-        /*this.socket.on('roomInit', function(data){
-          this.room = data;
-        }.bind(this));
-        this.socket.on('sensorUpdate', function(data){
-          this.room.sensor = data;
-        }.bind(this));
-        this.socket.on('valueChanged', function(data){
-          this.room.switches[data.id].value = data.value;
-        }.bind(this));*/
     }
-
-    /*changeValue(id, value) {
-      this.socket.emit('valueChanged',{id: id, value: value});
-    }
-
-    ngAfterViewInit() {
-      this.date =  new Date();
-      setInterval(() => {
-          this.date =  new Date();
-       }, 1000);
-      this.socket.emit('requestRoom');
-    }*/
-
-
 }
