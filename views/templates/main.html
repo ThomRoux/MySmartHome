@@ -21,7 +21,7 @@
           <td>{{dev.value.powerPin}}</td>
           <td>{{dev.value.switchPin}}</td>
           <td>
-            <button class="btn push-5-r push-10 btn-alert" type="button"><i class="fa fa-times"></i></button>
+            <button class="btn push-5-r push-10 btn-danger" type="button"><i class="fa fa-times"></i></button>
           </td>
         </tr>
         <tr>
@@ -63,48 +63,4 @@
   </div>
 </div>
 
-<!--<div class='switches-container text-white block block-transparent col-xs-12 col-sm-12 col-md-8 col-lg-8'>
-
-  <div class='block-content-2'>
-    <div class='switch' *ngFor='#sw of room.switches; #i=index;'>
-      <span>{{sw.name}}</span>
-      <label *ngIf='sw.type=="switch"' class="css-input switch switch-lg switch-primary pull-right">
-        <i class="fa fa-lightbulb-o text-muted"></i>
-        <input type='range' [(ngModel)]='sw.value' min="0" max="100" step="100" (ngModelChange)="changeValue(i,sw.value)"/>
-        <i class="fa fa-lightbulb-o text-warning"></i>
-      </label>
-      <div *ngIf='sw.type=="motor"' class="pull-right">
-        <i class="fa fa-minus text-muted"></i>
-        <input type='range' [(ngModel)]='sw.value' min="-1" max="1" step="1" (ngModelChange)="changeValue(i,sw.value)"/>
-        <i class="fa fa-plus text-muted"></i>
-      </div>
-      <div *ngIf='sw.type=="dimmer"' class="pull-right">
-        <i class="fa fa-lightbulb-o text-muted"></i>
-        <input type='range' [(ngModel)]='sw.value' min="0" max="100" step="1" (ngModelChange)="changeValue(i,sw.value)"/>
-        <i class="fa fa-lightbulb-o text-warning"></i>
-      </div>
-      <div *ngIf='sw.type=="time"' class="pull-right">
-        <input type="time" [(ngModel)]='sw.value' name="blabla"/>{{sw.value}}
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class='temp-hum-container text-white block block-transparent col-xs-12 col-sm-12 col-md-4 col-lg-4'>
-
-  <div class='temp-container block-content' [hidden]="!room.temperature">
-    <div class='temp col-xs-6 col-sm-6 col-md-12 col-lg-12'>
-      {{room.sensor.temperature | number:'.1-1'}} <span>°C</span>
-    </div>
-    <div class='hum col-xs-6 col-sm-6 col-md-12 col-lg-12'>
-      {{room.sensor.humidity | number:'.1-1'}} <span>%</span><span class='fa fa-tint'></span>
-    </div>
-  </div>
-
-</div>
-
-<div class="block block-rounded weather col-xs-12 col-sm-12 col-md-12 col-lg-12">
-  <iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src="http://forecast.io/embed/#lat=48.891838&lon=2.411926&name=Pantin&font=Helvetica Neue&units=ca"> </iframe>
-</div>
--->
 </div>

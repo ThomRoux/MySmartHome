@@ -53,13 +53,13 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   var _this = this;
   this.name = _name;
   this.type = 'LED';
-  this.outputPin = _outputPin;
+  this.powerPin = _outputPin;
   this.switchPin = _switchPin;
   this.level = this.range;
   this.on = (this.level>0);
   this.lastSwitch = 0;
   // OUTPUT Pin and INPUT Pin are created
-  this.pwm = new Gpio(this.outputPin, {mode: Gpio.OUTPUT});
+  this.pwm = new Gpio(this.powerPin, {mode: Gpio.OUTPUT});
   this.switch = new Gpio(this.switchPin, {
     mode: Gpio.INPUT,
     pullUpDown: Gpio.PUD_UP,
