@@ -27,10 +27,6 @@ export class KeysPipe implements PipeTransform {
 export class AppComponent {
     socket = null;
 
-    //room: Object = { sensor : {} };// = room;
-    //config = {};
-    //date = new Date();
-
     config : any = {};
     //config = {};
 
@@ -42,6 +38,7 @@ export class AppComponent {
         this.socket = io('http://pictrl1.local:8000');
         this.socket.on('init', function(data){
             this.config = _.clone(data);
+            this.device = {};
         }.bind(this));
     }
 }
