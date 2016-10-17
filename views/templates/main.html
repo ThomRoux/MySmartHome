@@ -18,8 +18,8 @@
         <tr *ngFor="#dev of config | keys ; #i=index;">
           <td>{{dev.value.type}}</td>
           <td>{{dev.value.name}}</td>
-          <td>{{dev.value.pins}}</td>
-          <td>{{dev.value.switchPins}}</td>
+          <td>{{dev.value.powerPin}}</td>
+          <td>{{dev.value.switchPin}}</td>
           <td><button class="btn push-5-r push-10" type="button"><i class="fa fa-times"></i></button></td>
         </tr>
         <tr>
