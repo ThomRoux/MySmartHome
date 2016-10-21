@@ -181,11 +181,11 @@ var Light = function(_name, _powerPin, _switchPin) {
 }
 
 var configFromJSON = {
-  "LED": function(data) {
-    return new LED(data.name, data.outputPin, data.switchPin);
+  'LED': function(name, output, sw) {
+    return new LED(name, output, sw);
   },
-  "Light": function(data) {
-    return new Light(data.name, data.outputPin, da);
+  'Light': function(name, output, sw) {
+    return new Light(name, output, sw);
   }
 };
 var config_json = {
