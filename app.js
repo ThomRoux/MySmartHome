@@ -29,8 +29,8 @@ var Gpio = require('pigpio').Gpio;
 */
 MyBox = {
   'switches': {
-    'Switch 1': 21,
-    'Switch 2': 20,
+    'Switch 1': 13/*21*/,
+    'Switch 2': 17/*20*/,
     'Switch 3': 16,
     'Switch 4': 12,
     'Switch 5': 7,
@@ -43,13 +43,13 @@ MyBox = {
     'Switch 12': 14
   },
   'devices': {
-    'DC 1': 29,
+    'DC 1': 18/*29*/,
     'DC 2': 19,
     'DC 3': 13,
     'DC 4': 6,
     'DC 5': 5,
     'DC 6': 11,
-    'Relay 1': 22,
+    'Relay 1': 4/*22*/,
     'Relay 2': 27,
     'Relay 3': 17,
     'Relay 4': 4,
@@ -194,9 +194,9 @@ var config_json = {
   'LED': {type: 'LED', name: 'LED', output: 'DC 1', switch: 'Switch 2'}
 };
 console.log(_);
-/*var config = _.mapObject(config_json, function(val, key) {
-  return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
-});*/
+var config = _.mapObject(config_json, function(val, key) {
+  return configFromJSON[val.type](val.name, MyBox['devices'][val.output], MyBox['switches'][val.switch]);
+});
 var config = {
   'Light': new Light('Light',4,13),
   'LED': new LED('LED',18,17)
