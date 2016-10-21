@@ -61,7 +61,7 @@ MyBox = {
 /*
   DEFINITION DES OBJETS CONNECTES
 */
-var LED = function(_name, _outputPin, _switchPin, _rpio) {
+var LED = function(_name, _outputPin, _switchPin) {
   //_rpio = _rpio || rpio;
   var _this = this;
   this.name = _name;
@@ -123,8 +123,7 @@ var LED = function(_name, _outputPin, _switchPin, _rpio) {
   io.emit("valueChanged", this);
 }
 
-var Light = function(_name, _powerPin, _switchPin, _rpio) {
-  _rpio = _rpio || rpio;
+var Light = function(_name, _powerPin, _switchPin) {
   var _this = this;
   this.name = _name;
   this.type = 'Light';
