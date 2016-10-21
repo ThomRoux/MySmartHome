@@ -17,11 +17,11 @@ io.set("origins", "*:*");
 /*
   CONNECTION AU MODULE GPIO DU RASPBERRY
 */
-var rpio = require('rpio');
+/*var rpio = require('rpio');
 rpio.init({
   gpiomem: false,
   mapping: 'physical'
-});
+});*/
 var Gpio = require('pigpio').Gpio;
 
 /*
@@ -29,19 +29,32 @@ var Gpio = require('pigpio').Gpio;
 */
 MyBox = {
   'switches': {
-    1: 3, 2: 5, 3: 7, 4: 11,
-    5: 13, 6: 15, 7: 19, 8: 21,
-    9: 8, 10: 10, 11: 16, 12: 18
+    'Switch 1': 21,
+    'Switch 2': 20,
+    'Switch 3': 16,
+    'Switch 4': 12,
+    'Switch 5': 7,
+    'Switch 6': 8,
+    'Switch 7': 25,
+    'Switch 8': 24,
+    'Switch 9': 23,
+    'Switch 10': 18,
+    'Switch 11': 15,
+    'Switch 12': 14
   },
   'devices': {
-    1: { type: 'Low Voltage Dimmable', pin: 32},
-    2: { type: 'Low Voltage Dimmable', pin: 12},
-    3: { type: 'Low Voltage Dimmable', pin: 35},
-    4: { type: 'Low Voltage Dimmable', pin: 33},
-    5: { type: 'Power Relay', pin: 23},
-    6: { type: 'Power Relay', pin: 31},
-    7: { type: 'Power Relay', pin: 29},
-    8: { type: 'Power Relay', pin: 27},
+    'DC 1': 29,
+    'DC 2': 19,
+    'DC 3': 13,
+    'DC 4': 6,
+    'DC 5': 5,
+    'DC 6': 11,
+    'Relay 1': 22,
+    'Relay 2': 27,
+    'Relay 3': 17,
+    'Relay 4': 4,
+    'Relay 5': 3,
+    'Relay 6': 2
   }
 }
 
@@ -131,15 +144,9 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   this.switchValue = this.switch.digitalRead();
   this.out.digitalWrite(this.on==100?0:1);
 
-  //_rpio.open(this.powerPin, _rpio.OUTPUT);
-  //_rpio.write(this.powerPin, _rpio.HIGH);
-  //_rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
-  //this.switchValue = _rpio.read(this.switchPin);
-
   this.toggle = function(level) {
     var dt = new Date();
     if (dt-this.lastSwitch > 200) {
-      //_rpio.msleep(20);
       setTimeout(function(){}, 20);
       if (level!=_this.switchValue) {
         this.lastSwitch = dt;
@@ -151,7 +158,6 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
     }
   }
   this.turnOn = function() {
-    //_rpio.write(this.powerPin, _rpio.LOW);
     this.out.digitalWrite(0);
     this.level = 100;
     this.on = true;
@@ -159,7 +165,6 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
     console.log((new Date()).toTimeString().slice(0, 8),this.name,"is on");
   }
   this.turnOff = function() {
-    //_rpio.write(this.powerPin, _rpio.HIGH);
     this.out.digitalWrite(1);
     this.level = 0;
     this.on = false;
@@ -172,112 +177,8 @@ var Light = function(_name, _powerPin, _switchPin, _rpio) {
   }
 
   // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  //_rpio.poll(this.switchPin, this.toggle.bind(this), _rpio.POLL_BOTH);
   this.switch.on('interrupt', this.toggle.bind(this));
   io.emit("valueChanged", this);
-}
-
-var Motor = function(_name, _powerPins, _switchPins, _rpio) {
-  _rpio = _rpio || rpio;
-  var _this = this;
-  this.name = _name;
-  this.type = 'Motor';
-  this.powerPins = _powerPins;
-  this.switchPins = _switchPins;
-  this.on = false;
-  this.level = 0;
-  this.lastSwitch = 0;
-  this.switchValues = {
-    //_switchPins[0]: _rpio.read(_switchPins[0]),
-    //_switchPins[1]: _rpio.read(_switchPins[1])
-  };
-
-  _rpio.open(this.powerPin, _rpio.OUTPUT);
-  _rpio.write(this.powerPin, _rpio.HIGH);
-  _rpio.open(this.switchPin, _rpio.INPUT, _rpio.PULL_UP);
-
-  this.toggle = function(pin) {
-    var dt = new Date();
-    if (dt-this.lastSwitch > 200) {
-      _rpio.msleep(20);
-      if (_rpio.read(_this.switchPin)!=_this.switchValue) {
-        this.lastSwitch = dt;
-        _this.switchValue = _rpio.read(_this.switchPin);
-        console.log(new Date(),this.name,"toggled with switch");
-        if (this.on) this.turnOff();
-        else this.turnOn();
-      }
-    }
-  }
-  this.turnOn = function() {
-    _rpio.write(this.powerPin, _rpio.LOW);
-    this.level = 100;
-    this.on = true;
-    io.emit('valueChanged',this);
-    console.log(new Date(),this.name,"is on");
-  }
-  this.turnOff = function() {
-    _rpio.write(this.powerPin, _rpio.HIGH);
-    this.level = 0;
-    this.on = false;
-    io.emit('valueChanged',this);
-    console.log(new Date(),this.name,"is off");
-  }
-  this.dimmer = function(value) {
-    if (value==0) this.turnOff();
-    if (value==100) this.turnOn();
-  }
-
-  // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  _rpio.poll(this.switchPin[0], this.toggle.bind(this), _rpio.POLL_BOTH);
-  _rpio.poll(this.switchPin[1], this.toggle.bind(this), _rpio.POLL_BOTH);
-  io.emit("valueChanged", this);
-}
-
-var RGBLED = function(_name, _dimmerPins, _switchPin, _rpio) {
-  this.name = _name;
-  this.type = 'RGB LED';
-  this.dimmerPins = _dimmerPins;
-  this.switchPin = _switchPin;
-  this.rgb = [255,255,255];
-  this.on = false;
-
-  this.rpio.pwmSetClockDivider(64);
-  this.rpio.open(this.dimmerPins[0],rpio.PWM);
-  this.rpio.pwmSetRange(this.dimmerPin[0], 255);
-  this.rpio.open(this.dimmerPin[1], rpio.PWM);
-  this.rpio.pwmSetRange(this.dimmerPin[1], 255);
-  this.rpio.open(this.dimmerPin[1], rpio.PWM);
-  this.rpio.pwmSetRange(this.dimmerPin[1], 255);
-  this.rpio.open(this.switchPin, rpio.INPUT);
-
-  this.turnOn = function() {
-    this.rpio.pwmSetData(this.dimmerPin[0], 255);
-    this.rpio.pwmSetData(this.dimmerPin[1], 255);
-    this.rpio.pwmSetData(this.dimmerPin[2], 255);
-    this.rgb = [255,255,255];
-    this.on = true;
-  }
-  this.turnOff = function() {
-    this.rpio.pwmSetData(this.dimmerPin[0], 0);
-    this.rpio.pwmSetData(this.dimmerPin[1], 0);
-    this.rpio.pwmSetData(this.dimmerPin[2], 0);
-    this.on = false;
-  }
-  this.dimmer = function(r,g,b) {
-    if (r == 0 && g == 0 && b == 0) {
-      this.turnOff();
-    } else {
-      this.rpio.pwmSetData(this.dimmerPin[0], r);
-      this.rpio.pwmSetData(this.dimmerPin[1], g);
-      this.rpio.pwmSetData(this.dimmerPin[2], b);
-      this.rgb = [r,g,b];
-      this.on = true;
-    }
-  }
-
-  // On met en place un watcher sur le switchPin, correspondant à une action effectuée sur la commande murale
-  this.rpio.poll(this.switchPin, this.toggle, rpio.POLL_BOTH);
 }
 
 var configFromJSON = {
@@ -285,13 +186,15 @@ var configFromJSON = {
     return new LED(data.name, data.outputPin, data.switchPin);
   },
   "Light": function(data) {
-    return new Light(data.name, data.outputPin, 0);
+    return new Light(data.name, data.outputPin, da);
   }
 };
 var config_json = {
   //'Cuisine': {type: 'LED', name: 'Cuisine', outputPin: 12, switchPin: 1},
-  'Light': {type: 'Light', name: 'Light', outputPin: 7, switchPin: 11}
+  'Light': {type: 'Light', name: 'Light', output: 'Relay 1', switch: 'Switch 1'},
+  'LED': {type: 'LED', name: 'LED', output: 'DC 1', switch: 'Switch 2'}
 };
+console.log(_);
 /*var config = _.mapObject(config_json, function(val, key) {
   return configFromJSON[val.type](val.name, val.outpuPin, val.switchPin);
 });*/
@@ -323,7 +226,7 @@ io.on('connection', function (socket) {
   socket.on('removeDevice', function(name){
     delete config_json[name];
     // save config.json from config_json
-    // immediatly aply change to config
+    // immediatly apply change to config
     delete config[name];
     io.emit('init', config);
   });
